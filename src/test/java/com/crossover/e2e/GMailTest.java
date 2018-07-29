@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Random;
+
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.Assert.*;
@@ -16,7 +18,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class GMailTest extends TestCase {
     private WebDriver driver;
     private Properties properties = new Properties();
-
+    private String randomString_Subject="",randomString_Body="";
+    
     public void setUp() throws Exception {
     	
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Parthasarathy\\chrome_driver\\chromedriver.exe");
@@ -52,7 +55,27 @@ public class GMailTest extends TestCase {
         composeElement.click();
 
         driver.findElement(By.name("to")).clear();
-        driver.findElement(By.name("to")).sendKeys(properties.getProperty("to_email_address"));
+        driver.findElement(By.name("to")).sendKeys(properties.getProperty("username")+"@gmail.com");
+        randomString_Subject = RandomGenrator();
+        driver.findElement(By.name("subjectbox")).clear();
+        driver.findElement(By.name("subjectbox")).sendKeys("Random_Subject_"+randomString_Subject);
+        randomString_Body = RandomGenrator();
+        driver.findElement(By.xpath("(//*[@aria-label='Message Body'])[2]")).clear();
+        driver.findElement(By.xpath("(//*[@aria-label='Message Body'])[2]")).sendKeys("Random_Subject_"+randomString_Body);
         driver.findElement(By.xpath("//*[@role='button' and text()='Send']")).click();
     }
+    
+   public String RandomGenrator()
+   {
+	   String alphabet= "abcdefghijklmnopqrstuvwxyz";
+       String s = "";
+       Random random = new Random();
+       int randomLen = 1+random.nextInt(9);
+       for (int i = 0; i < randomLen; i++) {
+           char c = alphabet.charAt(random.nextInt(26));
+           s+=c;
+       }
+	   
+	   return s;   
+   }
 }
